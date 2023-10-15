@@ -1,0 +1,65 @@
+.address{
+  text-align: center;
+  justify-content: center;
+  margin-left:450px;
+  margin-top:0px;
+  border: 1px solid grey;
+  padding: 50px;
+  background-color: brown;
+  color: white;
+}
+
+.dialog {
+  height : 100vh;
+  width : 80vw; 
+  top: 0px;
+  left: 0px;
+  text-align: start;
+  overflow: hidden;
+  z-index: 1;
+  padding: 12rem;
+  margin-top: -150px;
+  margin-bottom:150px ;
+}
+
+.dialog-root{
+  border-radius: 10px;
+  text-align: start;
+  padding: 50px;
+  background-color: whitesmoke;
+}
+
+body{
+  background-color:lightgreen;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Times', sans-serif;
+  
+}
+
+button{
+  margin-top: 20px;
+  margin-left: 10rem;
+}
+button:hover{
+  background-color: green;
+}
+
+h1{
+  text-align: center;
+}
+
+.b2{
+  margin-left: 2rem;
+}
+
+h3{
+  text-transform: uppercase;
+  text-align: center;
+}
+
+
