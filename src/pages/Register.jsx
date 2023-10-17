@@ -49,18 +49,21 @@ const Register = () => {
   }
 
   return (
-    <div>
+    <div style={{textAlign:'center',marginLeft:"10rem"}}>
       <h2
         style={{
-          marginLeft: "25rem",
+          textAlign:'center',
+          marginLeft: "21rem",
           color: "green",
+      padding:'5px',
+      textTransform:"uppercase",
         }}
       >
         Sign up
       </h2>
 
       <form onSubmit={handleSubmit} style={{ marginLeft: "20rem" }}>
-        <div style={{ color: "lightGreen", padding: "10px" }}>
+        <div style={{ color: "green", padding: "10px",textAlign:"center" }}>
           <label>
             <b>Name:</b>
           </label>
@@ -73,7 +76,7 @@ const Register = () => {
           />
         </div>
 
-        <div style={{ color: "lightGreen", padding: "10px" }}>
+        <div style={{ color: "Green", padding: "10px" }}>
           <label>
             <b>Email:</b>
           </label>
@@ -88,7 +91,7 @@ const Register = () => {
 
         <div
           style={{
-            color: "lightGreen",
+            color: "Green",
             padding: "10px",
             marginLeft: "-25px",
           }}
@@ -105,11 +108,11 @@ const Register = () => {
           />
         </div>
 
-        <div style={{ margin: "20px" }}>
+        <div>
           <button
             type="submit"
             style={{
-              marginLeft: "5rem",
+              marginLeft: "2rem",
               backgroundColor: "green",
               color: "white",
             }}
