@@ -1,182 +1,414 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import { backendUrl  } from "../config";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { backendUrl } from "../config";
 import jwtDecode from "jwt-decode";
-import { FaPlaneArrival, FaPlaneDeparture, FaChild } from 'react-icons/fa';
-import { GiPerson } from 'react-icons/gi';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { FaPlaneArrival, FaPlaneDeparture, FaChild } from "react-icons/fa";
+import { GiPerson } from "react-icons/gi";
+import { useForm } from "react-hook-form";
 
-
-const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
-const { register, handleSubmit, formState: { errors } } = useForm();
-const [formData, setFormData] = useState({
-    tripType: 'round', 
-    departure: '',
-    arrival: '',
-    departureDate: '',
-    returnDate: '',
-    adults: '',
-    children: '',
-    class: '',
-    priceRange: '',
+const UserDialog = ({ handleDialog, fetchUsers }) => {
+  const {
+    formState: { errors },
+  } = useForm();
+  const [formData, setFormData] = useState({
+    tripType: "round",
+    departure: "",
+    arrival: "",
+    departureDate: "",
+    returnDate: "",
+    adult: "",
+    children: "",
+    class: "",
+    priceRange: "",
   });
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
-  const [error, setError] = useState('');
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
 
-
-  const handleFormSubmit = async (data) => {
-    const { accessToken } = JSON.parse(localStorage.getItem('user'));
+    const { accessToken } = JSON.parse(localStorage.getItem("user"));
     try {
       const response = await fetch(`${backendUrl}/users`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'auth-token': accessToken,
+          "Content-Type": "application/json",
+          "auth-token": accessToken,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
 
-      console.log('Response:', response);
-
       if (response.ok) {
-        const responseData = await response.json();
-        console.log('Response Data:', responseData);
+        await response.json();
         await fetchUsers();
         handleDialog();
       } else {
         const errorData = await response.json();
-        console.error('Error Data:', errorData);
-        setError(errorData.msg);
+        console.log(errorData);
       }
     } catch (error) {
-      console.error('Error submitting user data:', error);
-      setError('An error occurred while submitting the form.');
+      console.error("Error submitting user data:", error);
     }
   };
-
 
   return (
     <div className="dialog">
       <div className="dialog-root">
-
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <form onSubmit={handleFormSubmit}>
           <div>
             <h3>Flight ticket booking application</h3>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '20px' }}>
-            <input type="radio" {...register('tripType')} value="round" />
-            <p className='text-xl font-bold'>Round trip</p>
+          <div
+            style={{
+              display: "flex",
+              gap: "1rem",
+              marginTop: "20px",
+            }}
+          >
+            <input
+              type="radio"
+              name="tripType"
+              value="round"
+              onChange={handleInputChange}
+              checked={formData.tripType === "round"}
+            />
+            <p className="text-xl font-bold">Round trip</p>
 
-            <input type="radio" {...register('tripType')} value="oneWay" />
-            <p className='text-xl font-bold'>One Way</p>
+            <input
+              type="radio"
+              name="tripType"
+              value="oneWay"
+              onChange={handleInputChange}
+              checked={formData.tripType === "oneWay"}
+            />
+            <p className="text-xl font-bold">One Way</p>
 
-            <input type="radio" {...register('tripType')} value="multiCity" />
-            <p className='text-xl font-bold'>Multi-City</p>
+            <input
+              type="radio"
+              name="tripType"
+              value="multiCity"
+              onChange={handleInputChange}
+              checked={formData.tripType === "multiCity"}
+            />
+            <p className="text-xl font-bold">Multi-City</p>
           </div>
-          {errors.tripType && <div style={{ textAlign: 'start', fontSize: '10px', color: 'red' }}>Error</div>}
+          {errors.tripType && (
+            <div
+              style={{
+                textAlign: "start",
+                fontSize: "10px",
+                color: "red",
+              }}
+            >
+              Error
+            </div>
+          )}
 
           <div>
             <div>
-              <div style={{ textAlign: 'start' }}>
-                <p style={{ fontWeight: 'bold', textAlign: 'start', marginTop: '10px' }}>ARRIVAL</p>
-                  <select {...register('departureAirport')} style={{textAlign:'center', width: '30rem', padding: '5px',position:'absolute' }}>
-                    <option value='' disabled> --select Airport--</option>
-                    <option value='ENIA'>England Newcastle International Airport</option>
-                    <option value='INIA'>Italy Napels International Airport</option>
-                    <option value='MMA'>Malaysia Mulu Airport</option>
-                    <option value='KMA'>Kenya Malindi Airport</option>
-                  </select>
-                  <FaPlaneDeparture style={{ position: 'relative' }} />
-              </div>
-              {errors.departureAirport && <div style={{ textAlign: 'start', fontSize: '10px', color: 'red' }}>Error</div>}
-
-              <div style={{ textAlign: 'start' }}>
-                <p style={{ fontWeight: 'bold', textAlign: 'start', marginTop: '10px' }}>DEPARTURE</p>
-                <select {...register('arrivalAirport')} style={{textAlign:'center', width: '30rem', padding: '5px',position:'absolute' }}>
-                  <option value='' disabled> --select Airport--</option>
-                  <option value='ENIA'>England Newcastle International Airport</option>
-                  <option value='INIA'>Italy Napels International Airport</option>
-                  <option value='MMA'>Malaysia Mulu Airport</option>
-                  <option value='KMA'>Kenya Malindi Airport</option>
+              <div style={{ textAlign: "start" }}>
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    textAlign: "start",
+                    marginTop: "10px",
+                  }}
+                >
+                  ARRIVAL
+                </p>
+                <select
+                  name="arrival"
+                  value={formData.arrival}
+                  style={{
+                    textAlign: "center",
+                    width: "30rem",
+                    padding: "5px",
+                    position: "absolute",
+                  }}
+                  onChange={handleInputChange}
+                >
+                  <option value="" disabled>
+                    {" "}
+                    --select Airport--
+                  </option>
+                  <option value="ENIA">
+                    England Newcastle International Airport
+                  </option>
+                  <option value="INIA">
+                    Italy Napels International Airport
+                  </option>
+                  <option value="MMA">Malaysia Mulu Airport</option>
+                  <option value="KMA">Kenya Malindi Airport</option>
                 </select>
-                <FaPlaneArrival style={{ position: 'relative' }} />
+                <FaPlaneDeparture style={{ position: "relative" }} />
               </div>
-              {errors.arrivalAirport && <div style={{ textAlign: 'start', fontSize: '10px', color: 'red' }}>Error</div>}
-
-              <div style={{ display: 'flex', marginTop: '10px' }}>
-                <div style={{ marginRight: '10px' }}>
-                  <p style={{ fontWeight: 'bold', textAlign: 'start' }}>DEPARTURE DATE</p>
-                  <input type="date" {...register('departureDate')} style={{ width: '15rem', padding: '5px' }} />
+              {errors.departureAirport && (
+                <div
+                  style={{
+                    textAlign: "start",
+                    fontSize: "10px",
+                    color: "red",
+                  }}
+                >
+                  Error
                 </div>
-                {errors.departureDate && <div style={{ textAlign: 'start', fontSize: '10px', color: 'red' }}>Error</div>}
+              )}
+
+              <div style={{ textAlign: "start" }}>
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    textAlign: "start",
+                    marginTop: "10px",
+                  }}
+                >
+                  DEPARTURE
+                </p>
+                <select
+                  name="departure"
+                  value={formData.departure}
+                  style={{
+                    textAlign: "center",
+                    width: "30rem",
+                    padding: "5px",
+                    position: "absolute",
+                  }}
+                  onChange={handleInputChange}
+                >
+                  <option value="" disabled>
+                    {" "}
+                    --select Airport--
+                  </option>
+                  <option value="ENIA">
+                    England Newcastle International Airport
+                  </option>
+                  <option value="INIA">
+                    Italy Napels International Airport
+                  </option>
+                  <option value="MMA">Malaysia Mulu Airport</option>
+                  <option value="KMA">Kenya Malindi Airport</option>
+                </select>
+                <FaPlaneArrival style={{ position: "relative" }} />
+              </div>
+              {errors.arrivalAirport && (
+                <div
+                  style={{
+                    textAlign: "start",
+                    fontSize: "10px",
+                    color: "red",
+                  }}
+                >
+                  Error
+                </div>
+              )}
+
+              <div style={{ display: "flex", marginTop: "10px" }}>
+                <div style={{ marginRight: "10px" }}>
+                  <p
+                    style={{
+                      fontWeight: "bold",
+                      textAlign: "start",
+                    }}
+                  >
+                    DEPARTURE DATE
+                  </p>
+                  <input
+                    type="date"
+                    name="departureDate"
+                    style={{ width: "15rem", padding: "5px" }}
+                    value={formData.departureDate}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                {errors.departureDate && (
+                  <div
+                    style={{
+                      textAlign: "start",
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    Error
+                  </div>
+                )}
 
                 <div>
-                  <p style={{ fontWeight: 'bold', textAlign: 'start' }}>RETURN DATE</p>
-                  <input type="date" {...register('returnDate')} style={{ width: '15rem', padding: '5px' }} />
+                  <p style={{ fontWeight: "bold", textAlign: "start" }}>
+                    RETURN DATE
+                  </p>
+                  <input
+                    type="date"
+                    name="returnDate"
+                    style={{ width: "15rem", padding: "5px" }}
+                    value={formData.returnDate}
+                    onChange={handleInputChange}
+                  />
                 </div>
-                {errors.returnDate && <div style={{ textAlign: 'start', fontSize: '10px', color: 'red' }}>Error</div>}
+                {errors.returnDate && (
+                  <div
+                    style={{
+                      textAlign: "start",
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    Error
+                  </div>
+                )}
               </div>
 
-              <div style={{ display: 'flex', marginTop: '10px' }}>
-                <div style={{ marginRight: '155px', textAlign: 'start' }}>
-                  <p style={{ fontWeight: 'bold', textAlign: 'start' }}>ADULT (18+)</p>
-                  <select {...register('adults')} style={{textAlign:'center', width: '15rem', padding: '5px',position:'absolute' }}>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
-                    <option value='4'>4</option>
-                    <option value='5'>5</option>
+              <div style={{ display: "flex", marginTop: "10px" }}>
+                <div style={{ marginRight: "155px", textAlign: "start" }}>
+                  <p style={{ fontWeight: "bold", textAlign: "start" }}>
+                    ADULT (18+)
+                  </p>
+                  <select
+                    name="adult"
+                    value={formData.adult}
+                    style={{
+                      textAlign: "center",
+                      width: "15rem",
+                      padding: "5px",
+                      position: "absolute",
+                    }}
+                    onChange={handleInputChange}
+                  >
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                   </select>
-                  <GiPerson style={{ position: 'relative' }} />
+                  <GiPerson style={{ position: "relative" }} />
                 </div>
-                {errors.adults && <div style={{ textAlign: 'start', fontSize: '10px', color: 'red' }}>Error</div>}
+                {errors.adult && (
+                  <div
+                    style={{
+                      textAlign: "start",
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    Error
+                  </div>
+                )}
 
-                <div style={{ textAlign: 'start' }}>
-                  <p style={{ fontWeight: 'bold' }}>CHILDREN (0-17)</p>
-                  <select {...register('children')} style={{textAlign:'center', width: '15rem', padding: '5px',position:'absolute' }}>
-                    <option value='0'>0</option>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
-                    <option value='4'>4</option>
-                    <option value='5'>5</option>
+                <div style={{ textAlign: "start" }}>
+                  <p style={{ fontWeight: "bold" }}>CHILDREN (0-17)</p>
+                  <select
+                    name="children"
+                    value={formData.children}
+                    style={{
+                      textAlign: "center",
+                      width: "15rem",
+                      padding: "5px",
+                      position: "absolute",
+                    }}
+                    onChange={handleInputChange}
+                  >
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                   </select>
-                  <FaChild style={{ position: 'relative' }} />
+                  <FaChild style={{ position: "relative" }} />
                 </div>
-                {errors.children && <div style={{ textAlign: 'start', fontSize: '10px', color: 'red' }}>Error</div>}
+                {errors.children && (
+                  <div
+                    style={{
+                      textAlign: "start",
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    Error
+                  </div>
+                )}
               </div>
 
-              <div style={{ display: 'flex', marginTop: '10px' }}>
-                <div style={{ marginRight: '10px' }}>
-                  <p style={{ fontWeight: 'bold', textAlign: 'start' }}>CLASS</p>
-                  <select {...register('class')} style={{ width: '15rem', padding: '5px' }}>
-                    <option value='economy'>ECONOMY</option>
-                    <option value='business'>BUSINESS</option>
+              <div style={{ display: "flex", marginTop: "10px" }}>
+                <div style={{ marginRight: "10px" }}>
+                  <p style={{ fontWeight: "bold", textAlign: "start" }}>
+                    CLASS
+                  </p>
+                  <select
+                    name="class"
+                    value={formData.class}
+                    style={{ width: "15rem", padding: "5px" }}
+                    onChange={handleInputChange}
+                  >
+                    <option value="economy">ECONOMY</option>
+                    <option value="business">BUSINESS</option>
                   </select>
                 </div>
-                {errors.class && <div style={{ textAlign: 'start', fontSize: '10px', color: 'red' }}>Error</div>}
+                {errors.class && (
+                  <div
+                    style={{
+                      textAlign: "start",
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    Error
+                  </div>
+                )}
 
                 <div>
-                  <p style={{ fontWeight: 'bold', textAlign: 'start' }}>PRICE RANGE</p>
-                  <select {...register('priceRange')} style={{ width: '15rem', padding: '5px' }}>
-                    <option value='allPrices'>ALL PRICES</option>
-                    <option value='1000'>$ 1000</option>
-                    <option value='2000'>$ 2000</option>
-                    <option value='3000'>$ 3000</option>
-                    <option value='4000'>$ 4000</option>
-                    <option value='5000'>$ 5000</option>
+                  <p style={{ fontWeight: "bold", textAlign: "start" }}>
+                    PRICE RANGE
+                  </p>
+                  <select
+                    name="priceRange"
+                    value={formData.priceRange}
+                    style={{ width: "15rem", padding: "5px" }}
+                    onChange={handleInputChange}
+                  >
+                    <option value="allPrices">ALL PRICES</option>
+                    <option value="1000">$ 1000</option>
+                    <option value="2000">$ 2000</option>
+                    <option value="3000">$ 3000</option>
+                    <option value="4000">$ 4000</option>
+                    <option value="5000">$ 5000</option>
                   </select>
                 </div>
-                {errors.priceRange && <div style={{ textAlign: 'start', fontSize: '10px', color: 'red' }}>Error</div>}
+                {errors.priceRange && (
+                  <div
+                    style={{
+                      textAlign: "start",
+                      fontSize: "10px",
+                      color: "red",
+                    }}
+                  >
+                    Error
+                  </div>
+                )}
               </div>
             </div>
           </div>
           <div>
-            <button type="submit" className='b1' style={{ backgroundColor: 'maroon', color: 'white' }}>FIND FLIGHT</button>
+            <button
+              type="submit"
+              className="b1"
+              style={{
+                backgroundColor: "maroon",
+                color: "white",
+              }}
+            >
+              FIND FLIGHT
+            </button>
           </div>
         </form>
       </div>
@@ -184,64 +416,69 @@ const [formData, setFormData] = useState({
   );
 };
 
-
 function User() {
-const navigate = useNavigate();
-const [users, setUsers] = useState([]);
-const [userRole, setRole] = useState('normal');
-const [showDialog, setShowDialog] = useState(false);
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const [userRole, setRole] = useState("normal");
+  const [showDialog, setShowDialog] = useState(false);
 
-
-
-const handleDialog = () => {
-  setShowDialog(!showDialog);
-};
-
-const { accessToken } = JSON.parse(localStorage.getItem('user'));
-
-const fetchUsers = async () => {
-  try {
-    const response = await fetch(`${backendUrl}/users`, {
-      headers: {
-        'auth-token': accessToken,
-      },
-    });
-
-    if (response.status === 401) {
-      console.error('Unauthorized access. Please log in again.');
-      localStorage.removeItem('user');
-      navigate('/login'); 
-    } else if (response.ok) {
-      const data = await response.json();
-      setUsers(data);
+  const handleDialog = () => {
+    if (showDialog) {
+      setShowDialog(false);
     } else {
-      console.error('Failed to fetch user data. Server responded with:', response.status);
+      setShowDialog(true);
     }
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-  }
-};
+  };
 
+  const storedUser = localStorage.getItem("user");
 
-useEffect(() => {
-  fetchUsers();
-  const { accessToken } = JSON.parse(localStorage.getItem('user'));
-  const { role } = jwtDecode(accessToken);
-  setRole(role);
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [accessToken]);
+  useEffect(() => {
+    try {
+      if (storedUser) {
+        const { accessToken } = JSON.parse(storedUser);
+        const { role } = jwtDecode(accessToken);
+        setRole(role);
+        fetchUsers(accessToken);
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
+  }, []);
+
+  const fetchUsers = async (accessToken) => {
+    try {
+      const response = await fetch(`${backendUrl}/users`, {
+        headers: {
+          "auth-token": accessToken,
+        },
+      });
+
+      if (response.status === 401) {
+        console.error("Unauthorized access. Please log in again.");
+        localStorage.removeItem("user");
+        navigate("/login");
+      } else if (response.ok) {
+        const data = await response.json();
+        setUsers(data);
+      } else {
+        console.error(
+          "Failed to fetch user data. Server responded with:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   return (
     <div>
       <h1>User Component</h1>
-      <button onClick={handleDialog} className='b2'>Open Dialog</button>
-      {showDialog && ( 
-        <UserDialog
-          handleDialog={handleDialog}
-          fetchUsers={fetchUsers}
-          accessToken={accessToken}
-          backendUrl={backendUrl}
-        />
+      <button onClick={handleDialog} className="b2">
+        Open Dialog
+      </button>
+      {showDialog && (
+        <UserDialog handleDialog={handleDialog} fetchUsers={fetchUsers} />
       )}
     </div>
   );
