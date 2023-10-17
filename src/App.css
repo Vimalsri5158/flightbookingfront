@@ -20,17 +20,20 @@
   padding: 12rem;
   margin-top: -150px;
   margin-bottom:150px ;
+  color: whitesmoke;
 }
 
 .dialog-root{
   border-radius: 10px;
   text-align: start;
   padding: 50px;
-  background-color: whitesmoke;
+  background-color: green;
+  opacity: 0.5rem;
 }
 
 body{
-  background-color:lightgreen;
+  background-image: url(./Images/natural.jpg);
+  object-fit: cover;
 }
 
 * {
@@ -56,6 +59,7 @@ h1{
 .b2{
   text-align: center;
   font-size: 10px;
+  color: white;
   /* margin-left: 10rem; */
 }
 
@@ -74,7 +78,7 @@ th{
   font-size: 14px;
 }
 td{
-  color: maroon;
+  color:yellowgreen;
   font-weight: bold;
 }
 

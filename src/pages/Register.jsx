@@ -62,7 +62,7 @@ const Register = () => {
         style={{
           textAlign: "center",
           marginLeft: "21rem",
-          color: "green",
+          color: "white",
           padding: "5px",
           textTransform: "uppercase",
         }}

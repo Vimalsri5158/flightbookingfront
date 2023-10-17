@@ -56,7 +56,7 @@ const Login = () => {
     >
       <h2
         style={{
-          color: "green",
+          color: "white",
           textTransform: "uppercase",
           textAlign:'center'
         }}
@@ -65,7 +65,7 @@ const Login = () => {
       </h2>
 
       <form onSubmit={handleSubmit}>
-        <div style={{ color: "Green", padding: "10px" }}>
+        <div style={{ color: "orange", padding: "10px" }}>
           <label>
             <b>Email:</b>
           </label>
@@ -78,7 +78,7 @@ const Login = () => {
           />
         </div>
 
-        <div style={{ color: "Green", padding: "10px",marginLeft:'-20px' }}>
+        <div style={{ color: "orange", padding: "10px",marginLeft:'-20px' }}>
           <label>
             <b>Password:</b>
           </label>
