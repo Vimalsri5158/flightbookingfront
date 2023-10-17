@@ -54,12 +54,16 @@ h1{
 }
 
 .b2{
-  margin-left: 2rem;
+  text-align: center;
 }
 
 h3{
   text-transform: uppercase;
   text-align: center;
+}
+.btn5{
+  text-align: center;
+  margin-left: -10px;
 }
 
 

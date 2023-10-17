@@ -1,14 +1,21 @@
+/* eslint-disable react/no-unknown-property */
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { backendUrl } from "../config";
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/login");
+  };
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -38,6 +45,7 @@ const Register = () => {
         "Content-Type": "application/json",
       },
     });
+    alert("User has been created successfully")
     handleReset();
   };
 
@@ -49,21 +57,21 @@ const Register = () => {
   }
 
   return (
-    <div style={{textAlign:'center',marginLeft:"10rem"}}>
+    <div style={{ textAlign: "center", marginLeft: "10rem" }}>
       <h2
         style={{
-          textAlign:'center',
+          textAlign: "center",
           marginLeft: "21rem",
           color: "green",
-      padding:'5px',
-      textTransform:"uppercase",
+          padding: "5px",
+          textTransform: "uppercase",
         }}
       >
         Sign up
       </h2>
 
       <form onSubmit={handleSubmit} style={{ marginLeft: "20rem" }}>
-        <div style={{ color: "green", padding: "10px",textAlign:"center" }}>
+        <div style={{ color: "green", padding: "10px", textAlign: "center" }}>
           <label>
             <b>Name:</b>
           </label>
@@ -119,6 +127,7 @@ const Register = () => {
           >
             <b>Sign in</b>
           </button>
+          <button onClick={handleClick}>Back to login</button>
         </div>
       </form>
     </div>

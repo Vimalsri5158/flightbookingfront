@@ -46,33 +46,28 @@ const Login = () => {
     }
   };
 
-  // if (localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')))
-  //   {
-  //     return <Navigate to={'/'} replace />;
-  //   }
 
   return (
     <div
       style={{
-        marginLeft: "15rem",
-        textAlign: "center",
-        padding: "50px",
-        paddingTop: "20px",
+        marginLeft: "35rem",
         fontStyle: "times",
       }}
     >
       <h2
         style={{
-          color: "maroon",
+          color: "green",
+          textTransform: "uppercase",
+          textAlign:'center'
         }}
       >
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Login Page
+      Login Page
       </h2>
 
       <form onSubmit={handleSubmit}>
-        <div style={{ color: "lightGreen", padding: "10px" }}>
+        <div style={{ color: "Green", padding: "10px" }}>
           <label>
-            <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email:</b>
+            <b>Email:</b>
           </label>
           <input
             type="email"
@@ -83,7 +78,7 @@ const Login = () => {
           />
         </div>
 
-        <div style={{ color: "lightGreen", padding: "10px" }}>
+        <div style={{ color: "Green", padding: "10px",marginLeft:'-20px' }}>
           <label>
             <b>Password:</b>
           </label>
@@ -98,9 +93,10 @@ const Login = () => {
 
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
+            display:'flex',
             padding: "20px",
+            textAlign:'center'
+            
           }}
         >
           <button
@@ -108,6 +104,7 @@ const Login = () => {
             style={{
               backgroundColor: "green",
               color: "white",
+              marginLeft:'-10px'
             }}
           >
             Login

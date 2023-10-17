@@ -457,29 +457,40 @@ function User() {
         console.error("Unauthorized access. Please log in again.");
         localStorage.removeItem("user");
         navigate("/login");
+        alert("ticket successfully  booked")
       } else if (response.ok) {
         const data = await response.json();
         setUsers(data);
+    
       } else {
         console.error(
           "Failed to fetch user data. Server responded with:",
-          response.status
+          response.status,
+          alert("ticket booked error")
         );
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
+      alert("ticket booked error")
     }
   };
 
   return (
     <div>
-      <h1>User Component</h1>
-      <button onClick={handleDialog} className="b2">
-        Open Dialog
-      </button>
-      {showDialog && (
-        <UserDialog handleDialog={handleDialog} fetchUsers={fetchUsers} />
-      )}
+    <div className="b2">
+    <h1>User Component</h1>
+    <button onClick={handleDialog} className="btn5">Open Dialog</button>
+    {showDialog && (
+      <UserDialog
+        handleDialog={handleDialog}
+        fetchUsers={fetchUsers}
+      />
+    )}
+
+      </div>
+
+
+
     </div>
   );
 }
