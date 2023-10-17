@@ -170,7 +170,7 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
                   style={{
                     fontWeight: "bold",
                     textAlign: "start",
-                    marginTop: "10px",
+                    marginTop: "20px",
                   }}
                 >
                   DEPARTURE
@@ -219,6 +219,7 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
                     style={{
                       fontWeight: "bold",
                       textAlign: "start",
+                      marginTop: "20px",
                     }}
                   >
                     DEPARTURE DATE
@@ -244,13 +245,19 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
                 )}
 
                 <div>
-                  <p style={{ fontWeight: "bold", textAlign: "start" }}>
+                  <p
+                    style={{
+                      fontWeight: "bold",
+                      textAlign: "start",
+                      marginTop: "20px",
+                    }}
+                  >
                     RETURN DATE
                   </p>
                   <input
                     type="date"
                     name="returnDate"
-                    style={{ width: "15rem", padding: "5px" }}
+                    style={{ width: "14.5rem", padding: "5px" }}
                     value={formData.returnDate}
                     onChange={handleInputChange}
                   />
@@ -269,7 +276,7 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
               </div>
 
               <div style={{ display: "flex", marginTop: "10px" }}>
-                <div style={{ marginRight: "155px", textAlign: "start" }}>
+                <div style={{ marginRight: "12rem", textAlign: "start" }}>
                   <p style={{ fontWeight: "bold", textAlign: "start" }}>
                     ADULT (18+)
                   </p>
@@ -339,7 +346,7 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
                 )}
               </div>
 
-              <div style={{ display: "flex", marginTop: "10px" }}>
+              <div style={{ display: "flex", marginTop: "20px" }}>
                 <div style={{ marginRight: "10px" }}>
                   <p style={{ fontWeight: "bold", textAlign: "start" }}>
                     CLASS
@@ -457,11 +464,10 @@ function User() {
         console.error("Unauthorized access. Please log in again.");
         localStorage.removeItem("user");
         navigate("/login");
-        alert("ticket successfully  booked")
+        alert("ticket successfully  booked");
       } else if (response.ok) {
         const data = await response.json();
         setUsers(data);
-    
       } else {
         console.error(
           "Failed to fetch user data. Server responded with:",
@@ -471,27 +477,62 @@ function User() {
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      alert("ticket booked error")
+      alert("ticket booked error");
     }
   };
 
   return (
-    <div>
-    <div className="b2">
-    <h1>User Component</h1>
-    <button onClick={handleDialog} className="btn5">Open Dialog</button>
-    {showDialog && (
-      <UserDialog
-        handleDialog={handleDialog}
-        fetchUsers={fetchUsers}
-      />
-    )}
-
+    <>
+      <div className="b2">
+        <h1>LIST OF BOOKING TICKETS</h1>
+        <button onClick={handleDialog} className="btn5">
+          Open Dialog
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            localStorage.removeItem("user");
+            navigate("/login");
+          }}
+          style={{ marginLeft: "40rem" }}
+        >
+          Logout
+        </button>
+        <div className="user-table">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Departure date</th>
+                <th>Return date</th>
+                <th>Class</th>
+                <th>Adult</th>
+                <th>Children</th>
+                <th>Price Range</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.departure}</td>
+                  <td>{user.arrival}</td>
+                  <td>{user.departureDate}</td>
+                  <td>{user.returnDate}</td>
+                  <td>{user.class}</td>
+                  <td>{user.adult}</td>
+                  <td>{user.children}</td>
+                  <td>{user.priceRange}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {showDialog && (
+          <UserDialog handleDialog={handleDialog} fetchUsers={fetchUsers} />
+        )}
       </div>
-
-
-
-    </div>
+    </>
   );
 }
 

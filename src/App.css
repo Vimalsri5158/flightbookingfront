@@ -11,7 +11,7 @@
 
 .dialog {
   height : 100vh;
-  width : 80vw; 
+  width : 65vw; 
   top: 0px;
   left: 0px;
   text-align: start;
@@ -55,6 +55,8 @@ h1{
 
 .b2{
   text-align: center;
+  font-size: 10px;
+  /* margin-left: 10rem; */
 }
 
 h3{
@@ -64,6 +66,21 @@ h3{
 .btn5{
   text-align: center;
   margin-left: -10px;
+}
+
+th{
+  font-weight: bold;
+  padding: 10px;
+  font-size: 14px;
+}
+td{
+  color: maroon;
+  font-weight: bold;
+}
+
+table{
+  text-align: center;
+  margin-left: 10rem;
 }
 
 
