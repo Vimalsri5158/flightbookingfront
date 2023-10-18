@@ -26,12 +26,17 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const userData={
+      email,
+      password,
+    }
+
     const loginResponse = await fetch(`${backendUrl}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify(userData),
     });
 
     const data = await loginResponse.json();
@@ -46,11 +51,17 @@ const Login = () => {
     }
   };
 
+  if (
+    localStorage.getItem("user") &&
+    JSON.parse(localStorage.getItem("user"))
+  ) {
+    return <Navigate to={"/"} replace />;
+  }
 
   return (
     <div
       style={{
-        marginLeft: "35rem",
+        marginLeft: "42rem",
         fontStyle: "times",
       }}
     >
@@ -58,14 +69,14 @@ const Login = () => {
         style={{
           color: "white",
           textTransform: "uppercase",
-          textAlign:'center'
+          textAlign: "center",
         }}
       >
-      Login Page
+        Login Page
       </h2>
 
       <form onSubmit={handleSubmit}>
-        <div style={{ color: "orange", padding: "10px" }}>
+        <div style={{ color: "lightgreen", padding: "10px" }}>
           <label>
             <b>Email:</b>
           </label>
@@ -78,7 +89,9 @@ const Login = () => {
           />
         </div>
 
-        <div style={{ color: "orange", padding: "10px",marginLeft:'-20px' }}>
+        <div
+          style={{ color: "lightgreen", padding: "10px", marginLeft: "-20px" }}
+        >
           <label>
             <b>Password:</b>
           </label>
@@ -93,18 +106,15 @@ const Login = () => {
 
         <div
           style={{
-            display:'flex',
+            display: "flex",
             padding: "20px",
-            textAlign:'center'
-            
+            textAlign: "center",
           }}
         >
           <button
             type="submit"
             style={{
-              backgroundColor: "green",
-              color: "white",
-              marginLeft:'-10px'
+              marginLeft: "-10px",
             }}
           >
             Login
@@ -115,8 +125,6 @@ const Login = () => {
             onClick={() => navigate("/register")}
             style={{
               marginLeft: "20px",
-              backgroundColor: "green",
-              color: "white",
             }}
           >
             Sign up

@@ -45,7 +45,7 @@ const Register = () => {
         "Content-Type": "application/json",
       },
     });
-    alert("User has been created successfully")
+    alert("User has been created successfully");
     handleReset();
   };
 
@@ -57,7 +57,7 @@ const Register = () => {
   }
 
   return (
-    <div style={{ textAlign: "center", marginLeft: "10rem" }}>
+    <div style={{ textAlign: "center", marginLeft: "15rem" }}>
       <h2
         style={{
           textAlign: "center",
@@ -71,7 +71,9 @@ const Register = () => {
       </h2>
 
       <form onSubmit={handleSubmit} style={{ marginLeft: "20rem" }}>
-        <div style={{ color: "green", padding: "10px", textAlign: "center" }}>
+        <div
+          style={{ color: "lightgreen", padding: "10px", textAlign: "center" }}
+        >
           <label>
             <b>Name:</b>
           </label>
@@ -84,7 +86,7 @@ const Register = () => {
           />
         </div>
 
-        <div style={{ color: "Green", padding: "10px" }}>
+        <div style={{ color: "lightGreen", padding: "10px" }}>
           <label>
             <b>Email:</b>
           </label>
@@ -99,7 +101,7 @@ const Register = () => {
 
         <div
           style={{
-            color: "Green",
+            color: "lightGreen",
             padding: "10px",
             marginLeft: "-25px",
           }}
@@ -121,8 +123,6 @@ const Register = () => {
             type="submit"
             style={{
               marginLeft: "2rem",
-              backgroundColor: "green",
-              color: "white",
             }}
           >
             <b>Sign in</b>
