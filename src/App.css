@@ -11,40 +11,27 @@
 
 .dialog {
   height : 100vh;
-  width : 65vw; 
+  width : 100vw; 
+  opacity: 1;
+  background-color: lightgreen ;
+  position: absolute;
   top: 0px;
   left: 0px;
-  
   text-align: start;
-  overflow: hidden;
+  line-height: 1rem;
   z-index: 1;
-  padding: 12rem;
-  margin-top: -150px;
-  margin-bottom:150px ;
-  color: whitesmoke;
-}
+  }
 
 .dialog-root{
-  border-radius: 10px;
-  text-align: start;
-  padding: 50px;
-  background-color: green;
-  opacity: 0.5rem;
+  border: none;
+  text-align: center;
+  margin-left: 450px;
 }
 
 body{
-  /* background-image: url(./Images/natural.jpg); */
-  /* object-fit: cover; */
   background-image:repeating-radial-gradient(circle, yellow , green 20%);
 }
 
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: 'Times', sans-serif;
-  
-}
 
 button{
   margin-top: 20px;
@@ -55,19 +42,17 @@ button:hover{
   color:white
 }
 
-h1{
-  text-align: center;
-}
 
 .b2{
-  text-align: center;
-  font-size: 10px;
-  color: white;
+  font-size: 16px;
+  color: maroon;
+  margin-left: 20rem;
 }
 
 h3{
   text-transform: uppercase;
   text-align: center;
+  margin-left: -35rem;
 }
 .btn5{
   text-align: center;
@@ -80,13 +65,19 @@ th{
   font-size: 14px;
 }
 td{
-  color:rgb(205, 50, 50);
+  color: darkgreen;
+  font-size: 10px;
   font-weight: bold;
 }
 
 table{
+  height: 200px;
   text-align: center;
-  margin-left: 10rem;
+  margin-left: 100px;
+
 }
+
+
+
 
 

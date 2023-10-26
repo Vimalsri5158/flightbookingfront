@@ -73,7 +73,7 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
             style={{
               display: "flex",
               gap: "1rem",
-              marginTop: "20px",
+              marginTop: "50px",
             }}
           >
             <input
@@ -83,7 +83,9 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
               onChange={handleInputChange}
               checked={formData.tripType === "round"}
             />
-            <p className="text-xl font-bold">Round trip</p>
+            <p>
+              <b>Round trip</b>
+            </p>
 
             <input
               type="radio"
@@ -92,7 +94,9 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
               onChange={handleInputChange}
               checked={formData.tripType === "oneWay"}
             />
-            <p className="text-xl font-bold">One Way</p>
+            <p>
+              <b>One Way</b>
+            </p>
 
             <input
               type="radio"
@@ -101,7 +105,9 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
               onChange={handleInputChange}
               checked={formData.tripType === "multiCity"}
             />
-            <p className="text-xl font-bold">Multi-City</p>
+            <p>
+              <b>Multi-City</b>
+            </p>
           </div>
           {errors.tripType && (
             <div
@@ -132,7 +138,7 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
                   value={formData.arrival}
                   style={{
                     textAlign: "center",
-                    width: "30rem",
+                    width: "32rem",
                     padding: "5px",
                     position: "absolute",
                   }}
@@ -180,7 +186,7 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
                   value={formData.departure}
                   style={{
                     textAlign: "center",
-                    width: "30rem",
+                    width: "32rem",
                     padding: "5px",
                     position: "absolute",
                   }}
@@ -276,7 +282,7 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
               </div>
 
               <div style={{ display: "flex", marginTop: "10px" }}>
-                <div style={{ marginRight: "12rem", textAlign: "start" }}>
+                <div style={{ marginRight: "11rem", textAlign: "start" }}>
                   <p style={{ fontWeight: "bold", textAlign: "start" }}>
                     ADULT (18+)
                   </p>
@@ -285,12 +291,15 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
                     value={formData.adult}
                     style={{
                       textAlign: "center",
-                      width: "15rem",
+                      width: "16rem",
                       padding: "5px",
                       position: "absolute",
                     }}
                     onChange={handleInputChange}
                   >
+                    {" "}
+                    --select--
+                    <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -321,9 +330,12 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
                       width: "15rem",
                       padding: "5px",
                       position: "absolute",
+                      marginLeft: "-8px",
                     }}
                     onChange={handleInputChange}
                   >
+                    {" "}
+                    --select--
                     <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -354,9 +366,12 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
                   <select
                     name="class"
                     value={formData.class}
-                    style={{ width: "15rem", padding: "5px" }}
+                    style={{ width: "16rem", padding: "5px" }}
                     onChange={handleInputChange}
                   >
+                    {" "}
+                    --select--
+                    <option value="allClass">ALL CLASS</option>
                     <option value="economy">ECONOMY</option>
                     <option value="business">BUSINESS</option>
                   </select>
@@ -408,13 +423,11 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
           <div>
             <button
               type="submit"
-              className="b1"
               style={{
-                backgroundColor: "maroon",
-                color: "white",
+                marginLeft: "-600px",
               }}
             >
-              FIND FLIGHT
+              BOOKING
             </button>
           </div>
         </form>
@@ -428,6 +441,7 @@ function User() {
   const [users, setUsers] = useState([]);
   const [userRole, setRole] = useState("normal");
   const [showDialog, setShowDialog] = useState(false);
+  const [accessToken, setAccessToken] = useState("");
 
   const handleDialog = () => {
     if (showDialog) {
@@ -445,6 +459,7 @@ function User() {
         const { accessToken } = JSON.parse(storedUser);
         const { role } = jwtDecode(accessToken);
         setRole(role);
+        setAccessToken(accessToken);
         fetchUsers(accessToken);
       }
     } catch (error) {
@@ -461,10 +476,11 @@ function User() {
       });
 
       if (response.status === 401) {
-        console.error("Unauthorized access. Please log in again.");
         localStorage.removeItem("user");
         navigate("/login");
-        alert("ticket successfully  booked");
+        alert(
+          "ticket successfully  booked and re-login your account Thank you!"
+        );
       } else if (response.ok) {
         const data = await response.json();
         setUsers(data);
@@ -481,12 +497,30 @@ function User() {
     }
   };
 
+  const deleteUser = async (userId) => {
+    const response = await fetch(`${backendUrl}/users/${userId}`, {
+      method: "DELETE",
+      headers: {
+        "auth-token": accessToken,
+      },
+    });
+
+    await response.json();
+    setUsers(users.filter((user) => user.id !== userId));
+  };
+
   return (
     <>
       <div className="b2">
-        <h1>LIST OF BOOKING TICKETS</h1>
-        <button onClick={handleDialog} className="btn5">
-          Open Dialog
+        <h1 style={{ marginLeft: "20rem", fontSize: "18px" }}>
+          LIST OF BOOKING TICKETS
+        </h1>
+        <button
+          onClick={handleDialog}
+          className="btn5"
+          style={{ marginLeft: "8rem", padding: "5px" }}
+        >
+          Click to Open Booking Form
         </button>
         <button
           className="btn btn-danger"
@@ -494,7 +528,7 @@ function User() {
             localStorage.removeItem("user");
             navigate("/login");
           }}
-          style={{ marginLeft: "40rem" }}
+          style={{ marginLeft: "30rem", padding: "5px" }}
         >
           Logout
         </button>
@@ -510,6 +544,14 @@ function User() {
                 <th>Adult</th>
                 <th>Children</th>
                 <th>Price Range</th>
+                <th>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Action
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -523,6 +565,9 @@ function User() {
                   <td>{user.adult}</td>
                   <td>{user.children}</td>
                   <td>{user.priceRange}</td>
+                  <td>
+                    <button onClick={() => deleteUser(user.id)}>Delete</button>
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -45,7 +45,7 @@ const Register = () => {
         "Content-Type": "application/json",
       },
     });
-    alert("User has been created successfully");
+    alert("User has been Sign in successfully");
     handleReset();
   };
 
