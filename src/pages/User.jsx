@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
@@ -436,6 +437,8 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
   );
 };
 
+
+
 function User() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -443,6 +446,8 @@ function User() {
   const [showDialog, setShowDialog] = useState(false);
   const [accessToken, setAccessToken] = useState("");
 
+
+/**handle dialog */
   const handleDialog = () => {
     if (showDialog) {
       setShowDialog(false);
@@ -453,6 +458,8 @@ function User() {
 
   const storedUser = localStorage.getItem("user");
 
+
+/**UseEffect */
   useEffect(() => {
     try {
       if (storedUser) {
@@ -467,6 +474,8 @@ function User() {
     }
   }, []);
 
+
+  /*Fetch user data*/
   const fetchUsers = async (accessToken) => {
     try {
       const response = await fetch(`${backendUrl}/users`, {
@@ -497,6 +506,8 @@ function User() {
     }
   };
 
+
+  /**Delete request method */
   const deleteUser = async (userId) => {
     const response = await fetch(`${backendUrl}/users/${userId}`, {
       method: "DELETE",
@@ -508,6 +519,7 @@ function User() {
     await response.json();
     setUsers(users.filter((user) => user.id !== userId));
   };
+
 
   return (
     <>
