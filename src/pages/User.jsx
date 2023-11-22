@@ -28,10 +28,11 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
+    }));
+    localStorage.setItem("formData", JSON.stringify(formData));
   };
 
   const handleFormSubmit = async (e) => {
@@ -437,8 +438,6 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
   );
 };
 
-
-
 function User() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -446,8 +445,7 @@ function User() {
   const [showDialog, setShowDialog] = useState(false);
   const [accessToken, setAccessToken] = useState("");
 
-
-/**handle dialog */
+  /**handle dialog */
   const handleDialog = () => {
     if (showDialog) {
       setShowDialog(false);
@@ -458,8 +456,7 @@ function User() {
 
   const storedUser = localStorage.getItem("user");
 
-
-/**UseEffect */
+  /**UseEffect */
   useEffect(() => {
     try {
       if (storedUser) {
@@ -468,12 +465,16 @@ function User() {
         setRole(role);
         setAccessToken(accessToken);
         fetchUsers(accessToken);
+        localStorage.setItem("formData", JSON.stringify(formData));
+        const storedFormData = localStorage.getItem("formData");
+        if (storedFormData) {
+          setFormData(JSON.parse(storedFormData));
+        }
       }
     } catch (error) {
       console.error("Error parsing user data:", error);
     }
   }, []);
-
 
   /*Fetch user data*/
   const fetchUsers = async (accessToken) => {
@@ -506,7 +507,6 @@ function User() {
     }
   };
 
-
   /**Delete request method */
   const deleteUser = async (userId) => {
     const response = await fetch(`${backendUrl}/users/${userId}`, {
@@ -515,11 +515,10 @@ function User() {
         "auth-token": accessToken,
       },
     });
-
+    localStorage.removeItem("formData");
     await response.json();
     setUsers(users.filter((user) => user.id !== userId));
   };
-
 
   return (
     <>
