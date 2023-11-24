@@ -484,7 +484,7 @@ function User() {
     } catch (error) {
       console.error("Error parsing user data:", error);
     }
-  }, []);
+  }, [storedUser]);
 
 
 
