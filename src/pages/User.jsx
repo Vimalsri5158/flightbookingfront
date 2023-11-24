@@ -46,7 +46,7 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
     e.preventDefault();
     console.log(formData);
 
-    const { accessToken } = JSON.parse(storedUser);
+    const { accessToken } = JSON.parse(localStorage.getItem("user"));
     try {
       const response = await fetch(`${backendUrl}/users`, {
         method: "POST",
@@ -435,8 +435,9 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
               style={{
                 marginLeft: "-600px",
               }}
+              onClick={() => handleFormSubmit(storedUser)}
             >
-              BOOKING
+              Submit
             </button>
           </div>
         </form>
@@ -445,15 +446,13 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
   );
 };
 
-
 function User() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [userRole, setRole] = useState("normal");
   const [showDialog, setShowDialog] = useState(false);
   const [accessToken, setAccessToken] = useState("");
-  const [formData, setFormData] = useState({});
-
+  const [formData, setFormData] = useState();
 
   /**handle dialog */
   const handleDialog = () => {
@@ -467,28 +466,25 @@ function User() {
 
   /**UseEffect */
   useEffect(() => {
-    try {
-      if (storedUser) {
-        const { accessToken } = JSON.parse(storedUser);
-        const { role } = jwtDecode(accessToken);
-        setRole(role);
-        setAccessToken(accessToken);
-        fetchUsers(accessToken);
-        // localStorage.setItem("formData", JSON.stringify(formData));
-        const storedFormData = localStorage.getItem("formData");
-        if (storedFormData) {
-          setFormData(JSON.parse(storedFormData));
-          
+    const fetchData = async () => {
+      try {
+        if (storedUser) {
+          const { accessToken } = JSON.parse(storedUser);
+          const { role } = jwtDecode(accessToken);
+          setRole(role);
+          setAccessToken(accessToken);
+          const storedFormData = localStorage.getItem("formData");
+          if (storedFormData) {
+            setFormData(JSON.parse(storedFormData));
+          }
+          await fetchUsers(accessToken);
         }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
       }
-    } catch (error) {
-      console.error("Error parsing user data:", error);
-    }
-  }, [storedUser]);
-
-
-
-  
+    };
+    fetchData();
+  }, []);
 
   /*Fetch user data*/
   const fetchUsers = async (accessToken) => {
@@ -533,7 +529,6 @@ function User() {
     await response.json();
     setUsers(users.filter((user) => user.id !== userId));
   };
-
 
   return (
     <>
@@ -604,7 +599,8 @@ function User() {
           <UserDialog
             handleDialog={handleDialog}
             fetchUsers={fetchUsers}
-  
+            backendUrl={backendUrl}
+            storedUser={storedUser}
           />
         )}
       </div>
