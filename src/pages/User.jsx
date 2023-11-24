@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
@@ -10,7 +11,7 @@ import { FaPlaneArrival, FaPlaneDeparture, FaChild } from "react-icons/fa";
 import { GiPerson } from "react-icons/gi";
 import { useForm } from "react-hook-form";
 
-const UserDialog = ({ handleDialog, fetchUsers }) => {
+const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
   const {
     formState: { errors },
   } = useForm();
@@ -32,14 +33,20 @@ const UserDialog = ({ handleDialog, fetchUsers }) => {
       ...prevFormData,
       [name]: value,
     }));
-    localStorage.setItem("formData", JSON.stringify(formData));
+    localStorage.setItem(
+      "formData",
+      JSON.stringify({
+        ...formData,
+        [name]: value,
+      })
+    );
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
 
-    const { accessToken } = JSON.parse(localStorage.getItem("user"));
+    const { accessToken } = JSON.parse(storedUser);
     try {
       const response = await fetch(`${backendUrl}/users`, {
         method: "POST",
@@ -454,25 +461,27 @@ function User() {
     }
   };
 
-  const storedUser = localStorage.getItem("user");
-
   /**UseEffect */
   useEffect(() => {
     try {
+      const storedUser = localStorage.getItem("user");
       if (storedUser) {
-        const { accessToken } = JSON.parse(storedUser);
-        const { role } = jwtDecode(accessToken);
-        setRole(role);
-        setAccessToken(accessToken);
-        fetchUsers(accessToken);
-        localStorage.setItem("formData", JSON.stringify(formData));
-        const storedFormData = localStorage.getItem("formData");
-        if (storedFormData) {
-          setFormData(JSON.parse(storedFormData));
+        const parsedUser = JSON.parse(storedUser);
+        const { accessToken } = parsedUser || {}; // Destructure accessToken or default to an empty object
+
+        if (accessToken) {
+          const { role } = jwtDecode(accessToken);
+          setRole(role);
+          setAccessToken(accessToken);
+          fetchUsers(accessToken);
+          const savedFormData = JSON.parse(localStorage.getItem("formData"));
+          if (savedFormData) {
+            setFormData(savedFormData);
+          }
         }
       }
     } catch (error) {
-      console.error("Error parsing user data:", error);
+      console.error("Error parsing or retrieving user data:", error);
     }
   }, []);
 
@@ -537,6 +546,7 @@ function User() {
           className="btn btn-danger"
           onClick={() => {
             localStorage.removeItem("user");
+            localStorage.removeItem("formData");
             navigate("/login");
           }}
           style={{ marginLeft: "30rem", padding: "5px" }}
@@ -585,7 +595,11 @@ function User() {
           </table>
         </div>
         {showDialog && (
-          <UserDialog handleDialog={handleDialog} fetchUsers={fetchUsers} />
+          <UserDialog
+            handleDialog={handleDialog}
+            fetchUsers={fetchUsers}
+            setFormData={setFormData}
+          />
         )}
       </div>
     </>
