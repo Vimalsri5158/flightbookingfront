@@ -445,12 +445,15 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
   );
 };
 
+
 function User() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [userRole, setRole] = useState("normal");
   const [showDialog, setShowDialog] = useState(false);
   const [accessToken, setAccessToken] = useState("");
+  const [formData, setFormData] = useState({});
+
 
   /**handle dialog */
   const handleDialog = () => {
@@ -460,30 +463,32 @@ function User() {
       setShowDialog(true);
     }
   };
+  const storedUser = localStorage.getItem("user");
 
   /**UseEffect */
   useEffect(() => {
     try {
-      const storedUser = localStorage.getItem("user");
       if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        const { accessToken } = parsedUser || {}; // Destructure accessToken or default to an empty object
-
-        if (accessToken) {
-          const { role } = jwtDecode(accessToken);
-          setRole(role);
-          setAccessToken(accessToken);
-          fetchUsers(accessToken);
-          const savedFormData = JSON.parse(localStorage.getItem("formData"));
-          if (savedFormData) {
-            setFormData(savedFormData);
-          }
+        const { accessToken } = JSON.parse(storedUser);
+        const { role } = jwtDecode(accessToken);
+        setRole(role);
+        setAccessToken(accessToken);
+        fetchUsers(accessToken);
+        // localStorage.setItem("formData", JSON.stringify(formData));
+        const storedFormData = localStorage.getItem("formData");
+        if (storedFormData) {
+          setFormData(JSON.parse(storedFormData));
+          
         }
       }
     } catch (error) {
-      console.error("Error parsing or retrieving user data:", error);
+      console.error("Error parsing user data:", error);
     }
   }, []);
+
+
+
+  
 
   /*Fetch user data*/
   const fetchUsers = async (accessToken) => {
@@ -496,6 +501,7 @@ function User() {
 
       if (response.status === 401) {
         localStorage.removeItem("user");
+        localStorage.removeItem("formData");
         navigate("/login");
         alert(
           "ticket successfully  booked and re-login your account Thank you!"
@@ -524,10 +530,10 @@ function User() {
         "auth-token": accessToken,
       },
     });
-    localStorage.removeItem("formData");
     await response.json();
     setUsers(users.filter((user) => user.id !== userId));
   };
+
 
   return (
     <>
@@ -598,7 +604,7 @@ function User() {
           <UserDialog
             handleDialog={handleDialog}
             fetchUsers={fetchUsers}
-            setFormData={setFormData}
+  
           />
         )}
       </div>
