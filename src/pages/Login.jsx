@@ -4,6 +4,8 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { backendUrl } from "../config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,10 +28,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userData={
+    const userData = {
       email,
       password,
-    }
+    };
 
     const loginResponse = await fetch(`${backendUrl}/auth/login`, {
       method: "POST",
@@ -41,38 +43,43 @@ const Login = () => {
 
     const data = await loginResponse.json();
 
+
+
     if (loginResponse.status === 401) {
       alert("Invalid Email id and password");
     } else {
       alert("Login success");
       localStorage.setItem("user", JSON.stringify(data));
+      localStorage.getItem("user") &&
+      JSON.parse(localStorage.getItem("user"))
       handleReset();
       navigate("/");
+      return <Navigate to={"/"} replace />;
     }
-  };
 
-  if (
-    localStorage.getItem("user") &&
-    JSON.parse(localStorage.getItem("user"))
-  ) {
-    return <Navigate to={"/"} replace />;
-  }
+
+
+  };
+  // if (
+   
+  // ) {
+  //   
+  // }
+
+
 
   return (
-    <div
-      style={{
-        marginLeft: "42rem",
-        fontStyle: "times",
-      }}
-    >
+    <div className="login">
       <h2
         style={{
-          color: "white",
-          textTransform: "uppercase",
           textAlign: "center",
+          backgroundColor: "lightgreen",
+          color: "black",
+          padding: "5px",
+          borderRadius: "10px",
         }}
       >
-        Login Page
+        LOGIN
       </h2>
 
       <form onSubmit={handleSubmit}>
@@ -90,7 +97,7 @@ const Login = () => {
         </div>
 
         <div
-          style={{ color: "lightgreen", padding: "10px", marginLeft: "-20px" }}
+          style={{ color: "lightgreen", padding: "10px", marginLeft: "-30px" }}
         >
           <label>
             <b>Password:</b>
@@ -117,17 +124,19 @@ const Login = () => {
               marginLeft: "-10px",
             }}
           >
-            Login
+            Login &nbsp;&nbsp;
+            <FontAwesomeIcon icon={faSignInAlt} />
           </button>
 
           <button
             type="button"
             onClick={() => navigate("/register")}
             style={{
-              marginLeft: "20px",
+              marginLeft: "50px",
             }}
           >
-            Sign up
+            Sign in &nbsp;&nbsp;
+            <FontAwesomeIcon icon={faSignInAlt} />
           </button>
         </div>
       </form>

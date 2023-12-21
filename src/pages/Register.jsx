@@ -4,8 +4,9 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { backendUrl } from "../config";
-import { Navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -13,8 +14,10 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleSignInClick = () => {
     navigate("/login");
+    alert("You are Successfull register!");
+    return <Navigate to={"/login"} replace={true} />;
   };
 
   const handleNameChange = (e) => {
@@ -53,27 +56,15 @@ const Register = () => {
     localStorage.getItem("user") &&
     JSON.parse(localStorage.getItem("user"))
   ) {
-    return <Navigate to={"/"} replace={true} />;
+    return <Navigate to={"/login"} replace={true} />;
   }
 
   return (
-    <div style={{ textAlign: "center", marginLeft: "15rem" }}>
-      <h2
-        style={{
-          textAlign: "center",
-          marginLeft: "21rem",
-          color: "white",
-          padding: "5px",
-          textTransform: "uppercase",
-        }}
-      >
-        Sign up
-      </h2>
+    <div className="register">
+      <h2>REGISTER</h2>
 
-      <form onSubmit={handleSubmit} style={{ marginLeft: "20rem" }}>
-        <div
-          style={{ color: "lightgreen", padding: "10px", textAlign: "center" }}
-        >
+      <form onSubmit={handleSubmit} className="form">
+        <div style={{ color: "lightgreen", textAlign: "center" }}>
           <label>
             <b>Name:</b>
           </label>
@@ -103,7 +94,8 @@ const Register = () => {
           style={{
             color: "lightGreen",
             padding: "10px",
-            marginLeft: "-25px",
+            marginLeft: "-30px",
+            marginBottom: "20px",
           }}
         >
           <label>
@@ -119,15 +111,10 @@ const Register = () => {
         </div>
 
         <div>
-          <button
-            type="submit"
-            style={{
-              marginLeft: "2rem",
-            }}
-          >
-            <b>Sign in</b>
+          <button type="submit" onClick={handleSignInClick}>
+            &nbsp;&nbsp;
+            <FontAwesomeIcon icon={faSignInAlt} />
           </button>
-          <button onClick={handleClick}>Back to login</button>
         </div>
       </form>
     </div>

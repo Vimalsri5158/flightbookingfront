@@ -1,30 +1,43 @@
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-unreachable */
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { backendUrl } from "../config";
 import jwtDecode from "jwt-decode";
 import { FaPlaneArrival, FaPlaneDeparture, FaChild } from "react-icons/fa";
 import { GiPerson } from "react-icons/gi";
 import { useForm } from "react-hook-form";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarCheck } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+
+
 
 const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
+  const navigate = useNavigate();
   const {
     formState: { errors },
   } = useForm();
   const [formData, setFormData] = useState({
-    tripType: "round",
-    departure: "",
-    arrival: "",
+    flightNumber: "",
+    bookingSeats: "",
     departureDate: "",
     returnDate: "",
-    adult: "",
     children: "",
     class: "",
     priceRange: "",
+    adult: "",
+    departure: "",
+    arrival: "",
   });
 
   const handleInputChange = (e) => {
@@ -46,8 +59,9 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
     e.preventDefault();
     console.log(formData);
 
-    const { accessToken } = JSON.parse(localStorage.getItem("user"));
     try {
+      const { accessToken } = JSON.parse(localStorage.getItem("user"));
+
       const response = await fetch(`${backendUrl}/users`, {
         method: "POST",
         headers: {
@@ -60,10 +74,16 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
       if (response.ok) {
         await response.json();
         await fetchUsers();
+        const { accessToken } = JSON.parse(localStorage.getItem("user"));
         handleDialog();
+        alert("Your ticket has been successfully booked, Thank you!");
+        history.push("/login");
+        return <Navigate to={"/"} replace />;
       } else {
         const errorData = await response.json();
         console.log(errorData);
+
+        alert("Error occurred in ticket booking. Please try again");
       }
     } catch (error) {
       console.error("Error submitting user data:", error);
@@ -81,8 +101,7 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
           <div
             style={{
               display: "flex",
-              gap: "1rem",
-              marginTop: "50px",
+              gap: "1.5rem",
             }}
           >
             <input
@@ -122,7 +141,6 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
             <div
               style={{
                 textAlign: "start",
-                fontSize: "10px",
                 color: "red",
               }}
             >
@@ -130,24 +148,76 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
             </div>
           )}
 
+          <div style={{ marginTop: "5px" }}>
+            <div style={{ textAlign: "start" }}>
+              <p>FlightNumber</p>
+              <select
+                name="flightNumber"
+                id="flightNumber"
+                value={formData.flightNumber}
+                onChange={handleInputChange}
+                style={{
+                  width: "30rem",
+                  padding: "5px",
+                  marginLeft: "5px",
+                  textAlign: "center",
+                }}
+              >
+                <option value="" disabled>
+                  {" "}
+                  --Flight Number--
+                </option>
+                <option value="A1234">A1234</option>
+                <option value="B4321">B4321</option>
+                <option value="C0987">C0987</option>
+                <option value="D6543">D6543</option>
+                <option value="E1997">E1997</option>
+                <option value="F1998">F1998</option>
+              </select>
+            </div>
+
+            <div style={{ textAlign: "start", paddingRight: "10px" }}>
+              <p>Booking Seats</p>
+              <select
+                name="bookingSeats"
+                id="bookingSeats"
+                value={formData.bookingSeats}
+                onChange={handleInputChange}
+                style={{
+                  width: "30rem",
+                  padding: "5px",
+                  marginLeft: "5px",
+                  textAlign: "center",
+                }}
+              >
+                <option value="" disabled>
+                  {" "}
+                  --Booking Seats--
+                </option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+          </div>
+
           <div>
             <div>
               <div style={{ textAlign: "start" }}>
-                <p
-                  style={{
-                    fontWeight: "bold",
-                    textAlign: "start",
-                    marginTop: "10px",
-                  }}
-                >
-                  ARRIVAL
-                </p>
+                <p>ARRIVAL</p>
                 <select
                   name="arrival"
                   value={formData.arrival}
                   style={{
                     textAlign: "center",
-                    width: "32rem",
+                    width: "30rem",
                     padding: "5px",
                     position: "absolute",
                   }}
@@ -157,14 +227,14 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                     {" "}
                     --select Airport--
                   </option>
-                  <option value="ENIA">
+                  <option value="ENGLAND">
                     England Newcastle International Airport
                   </option>
-                  <option value="INIA">
+                  <option value="ITALY">
                     Italy Napels International Airport
                   </option>
-                  <option value="MMA">Malaysia Mulu Airport</option>
-                  <option value="KMA">Kenya Malindi Airport</option>
+                  <option value="MALASIYA">Malaysia Mulu Airport</option>
+                  <option value="KENYA">Kenya Malindi Airport</option>
                 </select>
                 <FaPlaneDeparture style={{ position: "relative" }} />
               </div>
@@ -172,7 +242,6 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                 <div
                   style={{
                     textAlign: "start",
-                    fontSize: "10px",
                     color: "red",
                   }}
                 >
@@ -180,22 +249,14 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                 </div>
               )}
 
-              <div style={{ textAlign: "start" }}>
-                <p
-                  style={{
-                    fontWeight: "bold",
-                    textAlign: "start",
-                    marginTop: "20px",
-                  }}
-                >
-                  DEPARTURE
-                </p>
+              <div style={{ textAlign: "start", paddingTop: "10px" }}>
+                <p>DEPARTURE</p>
                 <select
                   name="departure"
                   value={formData.departure}
                   style={{
                     textAlign: "center",
-                    width: "32rem",
+                    width: "30rem",
                     padding: "5px",
                     position: "absolute",
                   }}
@@ -205,14 +266,14 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                     {" "}
                     --select Airport--
                   </option>
-                  <option value="ENIA">
+                  <option value="ENGLAND">
                     England Newcastle International Airport
                   </option>
-                  <option value="INIA">
+                  <option value="ITALY">
                     Italy Napels International Airport
                   </option>
-                  <option value="MMA">Malaysia Mulu Airport</option>
-                  <option value="KMA">Kenya Malindi Airport</option>
+                  <option value="MALASIYA">Malaysia Mulu Airport</option>
+                  <option value="KENYA">Kenya Malindi Airport</option>
                 </select>
                 <FaPlaneArrival style={{ position: "relative" }} />
               </div>
@@ -220,7 +281,7 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                 <div
                   style={{
                     textAlign: "start",
-                    fontSize: "10px",
+
                     color: "red",
                   }}
                 >
@@ -228,21 +289,17 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                 </div>
               )}
 
-              <div style={{ display: "flex", marginTop: "10px" }}>
-                <div style={{ marginRight: "10px" }}>
-                  <p
-                    style={{
-                      fontWeight: "bold",
-                      textAlign: "start",
-                      marginTop: "20px",
-                    }}
-                  >
-                    DEPARTURE DATE
-                  </p>
+              <div style={{ display: "flex", paddingTop: "10px" }}>
+                <div style={{ width: "15rem", textAlign: "start" }}>
+                  <p>DEPARTURE DATE</p>
                   <input
                     type="date"
                     name="departureDate"
-                    style={{ width: "15rem", padding: "5px" }}
+                    style={{
+                      textAlign: "center",
+                      width: "14rem",
+                      padding: "4px",
+                    }}
                     value={formData.departureDate}
                     onChange={handleInputChange}
                   />
@@ -251,7 +308,6 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                   <div
                     style={{
                       textAlign: "start",
-                      fontSize: "10px",
                       color: "red",
                     }}
                   >
@@ -260,19 +316,16 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                 )}
 
                 <div>
-                  <p
-                    style={{
-                      fontWeight: "bold",
-                      textAlign: "start",
-                      marginTop: "20px",
-                    }}
-                  >
-                    RETURN DATE
-                  </p>
+                  <p>RETURN DATE</p>
                   <input
                     type="date"
                     name="returnDate"
-                    style={{ width: "14.5rem", padding: "5px" }}
+                    style={{
+                      textAlign: "center",
+                      width: "14rem",
+                      padding: "4px",
+                      marginLeft: "10px",
+                    }}
                     value={formData.returnDate}
                     onChange={handleInputChange}
                   />
@@ -281,7 +334,6 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                   <div
                     style={{
                       textAlign: "start",
-                      fontSize: "10px",
                       color: "red",
                     }}
                   >
@@ -290,18 +342,16 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                 )}
               </div>
 
-              <div style={{ display: "flex", marginTop: "10px" }}>
-                <div style={{ marginRight: "11rem", textAlign: "start" }}>
-                  <p style={{ fontWeight: "bold", textAlign: "start" }}>
-                    ADULT (18+)
-                  </p>
+              <div style={{ display: "flex" }}>
+                <div style={{ width: "15rem", textAlign: "start" }}>
+                  <p>ADULT'S</p>
                   <select
                     name="adult"
                     value={formData.adult}
                     style={{
                       textAlign: "center",
-                      width: "16rem",
-                      padding: "5px",
+                      width: "15rem",
+                      padding: "6px",
                       position: "absolute",
                     }}
                     onChange={handleInputChange}
@@ -321,7 +371,6 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                   <div
                     style={{
                       textAlign: "start",
-                      fontSize: "10px",
                       color: "red",
                     }}
                   >
@@ -329,17 +378,20 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                   </div>
                 )}
 
-                <div style={{ textAlign: "start" }}>
-                  <p style={{ fontWeight: "bold" }}>CHILDREN (0-17)</p>
+                <div
+                  style={{
+                    width: "15rem",
+                    paddingLeft: "12px",
+                    textAlign: "start",
+                  }}
+                >
+                  <p>CHILDREN'S</p>
                   <select
                     name="children"
                     value={formData.children}
                     style={{
-                      textAlign: "center",
                       width: "15rem",
                       padding: "5px",
-                      position: "absolute",
-                      marginLeft: "-8px",
                     }}
                     onChange={handleInputChange}
                   >
@@ -352,13 +404,11 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <FaChild style={{ position: "relative" }} />
                 </div>
                 {errors.children && (
                   <div
                     style={{
                       textAlign: "start",
-                      fontSize: "10px",
                       color: "red",
                     }}
                   >
@@ -367,29 +417,26 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                 )}
               </div>
 
-              <div style={{ display: "flex", marginTop: "20px" }}>
+              <div style={{ display: "flex" }}>
                 <div style={{ marginRight: "10px" }}>
-                  <p style={{ fontWeight: "bold", textAlign: "start" }}>
-                    CLASS
-                  </p>
+                  <p>CLASS</p>
                   <select
                     name="class"
                     value={formData.class}
-                    style={{ width: "16rem", padding: "5px" }}
+                    style={{ width: "15rem", padding: "5px" }}
                     onChange={handleInputChange}
                   >
                     {" "}
                     --select--
                     <option value="allClass">ALL CLASS</option>
-                    <option value="economy">ECONOMY</option>
-                    <option value="business">BUSINESS</option>
+                    <option value="Economy">ECONOMY</option>
+                    <option value="Business">BUSINESS</option>
                   </select>
                 </div>
                 {errors.class && (
                   <div
                     style={{
                       textAlign: "start",
-                      fontSize: "10px",
                       color: "red",
                     }}
                   >
@@ -398,9 +445,7 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                 )}
 
                 <div>
-                  <p style={{ fontWeight: "bold", textAlign: "start" }}>
-                    PRICE RANGE
-                  </p>
+                  <p>PRICE RANGE</p>
                   <select
                     name="priceRange"
                     value={formData.priceRange}
@@ -419,7 +464,6 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
                   <div
                     style={{
                       textAlign: "start",
-                      fontSize: "10px",
                       color: "red",
                     }}
                   >
@@ -429,17 +473,27 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
               </div>
             </div>
           </div>
-          <div>
-            <button
-              type="submit"
-              style={{
-                marginLeft: "-600px",
-              }}
-              onClick={() => handleFormSubmit(storedUser)}
-            >
-              Submit
-            </button>
-          </div>
+          <button
+            type="submit"
+            onClick={(e)=>{
+              
+              e.preventDefault();
+              const confirmSubmit = window.confirm("Are you sure you want to submit?");
+          
+              if (confirmSubmit) {
+                handleFormSubmit(e);
+                navigate(-2)
+              }
+            }}
+            style={{
+              display: "inline-block",
+              padding: "5px",
+              margin: "10px",
+              border: "none",
+            }}
+          >
+            Submit
+          </button>
         </form>
       </div>
     </div>
@@ -452,7 +506,6 @@ function User() {
   const [userRole, setRole] = useState("normal");
   const [showDialog, setShowDialog] = useState(false);
   const [accessToken, setAccessToken] = useState("");
-  const [formData, setFormData] = useState();
 
   /**handle dialog */
   const handleDialog = () => {
@@ -473,11 +526,9 @@ function User() {
           const { role } = jwtDecode(accessToken);
           setRole(role);
           setAccessToken(accessToken);
-          const storedFormData = localStorage.getItem("formData");
-          if (storedFormData) {
-            setFormData(JSON.parse(storedFormData));
-          }
           await fetchUsers(accessToken);
+        } else {
+          console.error("Stored user data is undefined or null");
         }
       } catch (error) {
         console.error("Error parsing user data:", error);
@@ -499,22 +550,18 @@ function User() {
         localStorage.removeItem("user");
         localStorage.removeItem("formData");
         navigate("/login");
-        alert(
-          "ticket successfully  booked and re-login your account Thank you!"
-        );
       } else if (response.ok) {
         const data = await response.json();
+
         setUsers(data);
       } else {
         console.error(
           "Failed to fetch user data. Server responded with:",
-          response.status,
-          alert("ticket booked error")
+          response.status
         );
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      alert("ticket booked error");
     }
   };
 
@@ -530,34 +577,61 @@ function User() {
     setUsers(users.filter((user) => user.id !== userId));
   };
 
+  const confirmDelete = (userId) => {
+    if (window.confirm("Are you sure you want to delete?")) {
+      deleteUser(userId);
+      alert("Deleted!");
+    }
+  };
+
   return (
     <>
       <div className="b2">
-        <h1 style={{ marginLeft: "20rem", fontSize: "18px" }}>
-          LIST OF BOOKING TICKETS
-        </h1>
-        <button
-          onClick={handleDialog}
-          className="btn5"
-          style={{ marginLeft: "8rem", padding: "5px" }}
-        >
-          Click to Open Booking Form
-        </button>
-        <button
-          className="btn btn-danger"
-          onClick={() => {
-            localStorage.removeItem("user");
-            localStorage.removeItem("formData");
-            navigate("/login");
-          }}
-          style={{ marginLeft: "30rem", padding: "5px" }}
-        >
-          Logout
-        </button>
+        <div className="booking">
+          <button
+            onClick={handleDialog}
+            className="btn5"
+            style={{
+              backgroundColor: "green",
+              fontWeight: "bold",
+              marginRight: "70rem",
+              padding: "10px",
+              marginLeft: "-80px",
+            }}
+          >
+          <FontAwesomeIcon icon={faCalendarCheck} />
+            &nbsp;&nbsp;Booking Form
+          </button>
+          <button
+            className="btn5"
+            onClick={() => {
+              const confirmLogout = window.confirm("Are you sure you want to exit?");
+              if (confirmLogout) {
+              localStorage.removeItem("user");
+              localStorage.removeItem("formData");
+              
+              }
+            }}
+            style={{
+              backgroundColor: "green",
+              fontWeight: "bold",
+              display: "inline-block",
+              padding: "10px",
+            }}
+          >
+          <i className="fa fa-sign-out" aria-hidden="true"/>
+
+          <FontAwesomeIcon icon={faSignOutAlt} />
+          </button>
+        </div>
+        <h5>LIST OF BOOKING TICKETS</h5>
+        <br></br>
         <div className="user-table">
           <table className="table">
             <thead>
               <tr>
+                <th>Flight number</th>
+                <th>Booking seats</th>
                 <th>Departure</th>
                 <th>Arrival</th>
                 <th>Departure date</th>
@@ -566,19 +640,14 @@ function User() {
                 <th>Adult</th>
                 <th>Children</th>
                 <th>Price Range</th>
-                <th>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Action
-                </th>
+                <th> Action</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
                 <tr key={user.id}>
+                  <td>{user.flightNumber}</td>
+                  <td>{user.bookingSeats}</td>
                   <td>{user.departure}</td>
                   <td>{user.arrival}</td>
                   <td>{user.departureDate}</td>
@@ -588,7 +657,9 @@ function User() {
                   <td>{user.children}</td>
                   <td>{user.priceRange}</td>
                   <td>
-                    <button onClick={() => deleteUser(user.id)}>Delete</button>
+                    <button onClick={() => confirmDelete(user.id)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </td>
                 </tr>
               ))}
