@@ -4,8 +4,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { backendUrl } from "../config";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const Register = () => {

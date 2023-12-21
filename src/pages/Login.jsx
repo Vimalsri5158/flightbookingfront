@@ -43,30 +43,22 @@ const Login = () => {
 
     const data = await loginResponse.json();
 
-
-
     if (loginResponse.status === 401) {
       alert("Invalid Email id and password");
     } else {
       alert("Login success");
       localStorage.setItem("user", JSON.stringify(data));
-      localStorage.getItem("user") &&
-      JSON.parse(localStorage.getItem("user"))
+      localStorage.getItem("user") && JSON.parse(localStorage.getItem("user"));
       handleReset();
       navigate("/");
       return <Navigate to={"/"} replace />;
     }
-
-
-
   };
   // if (
-   
+
   // ) {
-  //   
+  //
   // }
-
-
 
   return (
     <div className="login">

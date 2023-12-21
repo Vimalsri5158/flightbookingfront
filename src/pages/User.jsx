@@ -14,13 +14,11 @@ import jwtDecode from "jwt-decode";
 import { FaPlaneArrival, FaPlaneDeparture, FaChild } from "react-icons/fa";
 import { GiPerson } from "react-icons/gi";
 import { useForm } from "react-hook-form";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { faCalendarCheck } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
-
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 
 const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
   const navigate = useNavigate();
@@ -475,14 +473,15 @@ const UserDialog = ({ handleDialog, fetchUsers, backendUrl }) => {
           </div>
           <button
             type="submit"
-            onClick={(e)=>{
-              
+            onClick={(e) => {
               e.preventDefault();
-              const confirmSubmit = window.confirm("Are you sure you want to submit?");
-          
+              const confirmSubmit = window.confirm(
+                "Are you sure you want to submit?"
+              );
+
               if (confirmSubmit) {
                 handleFormSubmit(e);
-                navigate(-2)
+                navigate(-2);
               }
             }}
             style={{
@@ -599,17 +598,18 @@ function User() {
               marginLeft: "-80px",
             }}
           >
-          <FontAwesomeIcon icon={faCalendarCheck} />
+            <FontAwesomeIcon icon={faCalendarCheck} />
             &nbsp;&nbsp;Booking Form
           </button>
           <button
             className="btn5"
             onClick={() => {
-              const confirmLogout = window.confirm("Are you sure you want to exit?");
+              const confirmLogout = window.confirm(
+                "Are you sure you want to exit?"
+              );
               if (confirmLogout) {
-              localStorage.removeItem("user");
-              localStorage.removeItem("formData");
-              
+                localStorage.removeItem("user");
+                localStorage.removeItem("formData");
               }
             }}
             style={{
@@ -619,9 +619,9 @@ function User() {
               padding: "10px",
             }}
           >
-          <i className="fa fa-sign-out" aria-hidden="true"/>
+            <i className="fa fa-sign-out" aria-hidden="true" />
 
-          <FontAwesomeIcon icon={faSignOutAlt} />
+            <FontAwesomeIcon icon={faSignOutAlt} />
           </button>
         </div>
         <h5>LIST OF BOOKING TICKETS</h5>
@@ -658,7 +658,7 @@ function User() {
                   <td>{user.priceRange}</td>
                   <td>
                     <button onClick={() => confirmDelete(user.id)}>
-                    <FontAwesomeIcon icon={faTrash} />
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </td>
                 </tr>
